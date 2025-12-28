@@ -158,65 +158,69 @@ const App: React.FC = () => {
   const getRandomPoem = (): Poem => POEM_DATA[Math.floor(Math.random() * POEM_DATA.length)];
 
   return (
-    <div className="min-h-screen bg-stone-200 text-stone-900 flex flex-col items-center p-4 select-none">
-      <div className="max-w-md w-full bg-[#fdfaf5] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col h-[850px] border-[10px] border-stone-800 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-stone-800 rounded-b-2xl z-50"></div>
-
-        <div className="pt-10 pb-4 px-6 bg-red-900 text-white relative flex items-center justify-center shrink-0 z-40">
-          <button onClick={() => setStep('welcome')} className="hover:opacity-80 transition-opacity">
-            <h1 className="text-lg font-bold font-serif-tc tracking-widest">行天宮線上求籤</h1>
-          </button>
-          
+    <div className="min-h-screen bg-stone-100 text-stone-900 flex flex-col items-center select-none font-sans overflow-x-hidden">
+      {/* Website Header */}
+      <header className="w-full bg-red-900 text-white py-4 px-6 shadow-lg flex items-center justify-between sticky top-0 z-50">
+        <div className="flex-1"></div>
+        <button onClick={() => setStep('welcome')} className="hover:opacity-80 transition-opacity">
+          <h1 className="text-xl md:text-2xl font-bold font-serif-tc tracking-widest">行天宮線上求籤</h1>
+        </button>
+        <div className="flex-1 flex justify-end">
           {step === 'result' && (
             <button 
               onClick={() => setStep('history')} 
-              className="absolute right-6 flex flex-col items-center gap-0.5 hover:bg-white/10 p-1 px-3 rounded-xl transition-colors"
+              className="flex flex-col items-center gap-0.5 hover:bg-white/10 p-1 px-3 rounded-xl transition-colors"
             >
-              <HandCoins size={18} />
+              <HandCoins size={20} />
               <span className="text-[10px] font-serif-tc font-bold">添香油錢</span>
             </button>
           )}
         </div>
+      </header>
 
-        <div className="flex-1 overflow-hidden relative flex flex-col">
+      {/* Main Responsive Content Area */}
+      <main className="w-full max-w-4xl flex-1 flex flex-col py-6 md:py-10 px-4 md:px-0">
+        <div className="bg-[#fdfaf5] rounded-3xl shadow-xl overflow-hidden flex flex-col min-h-[70vh] border border-stone-200 relative transition-all duration-500">
           
+          {/* WELCOME */}
           {step === 'welcome' && (
-            <div className="h-full flex flex-col animate-in fade-in duration-700">
-              <div className="flex-1 relative overflow-hidden">
+            <div className="flex-1 flex flex-col md:flex-row animate-in fade-in duration-700">
+              <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
                 <img src={DEITY_IMAGE} className="w-full h-full object-cover object-top" alt="Guan Yu" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/30 to-transparent"></div>
               </div>
-              <div className="p-8 space-y-6 bg-white rounded-t-[3rem] -mt-10 relative z-10 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
-                <div className="text-center space-y-2">
-                  <h2 className="text-3xl font-black text-red-900 font-serif-tc tracking-widest">恩主公靈籤</h2>
-                  <p className="text-stone-500 text-sm font-serif-tc">誠心祈求，必有感應</p>
+              <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-8">
+                <div className="text-center md:text-left space-y-4">
+                  <h2 className="text-4xl md:text-5xl font-black text-red-900 font-serif-tc tracking-widest">恩主公靈籤</h2>
+                  <p className="text-stone-500 text-lg font-serif-tc leading-relaxed">誠心祈求，必有感應。在此向 恩主公稟告您的心願，指引迷津。</p>
                 </div>
                 <button 
                   onClick={() => { setStep('input'); setInputMode('voice'); }} 
-                  className="w-full bg-red-800 text-white py-5 rounded-2xl font-bold text-xl shadow-xl flex items-center justify-center active:scale-95 transition-all"
+                  className="w-full bg-red-800 text-white py-6 rounded-2xl font-bold text-xl shadow-xl hover:bg-red-900 active:scale-95 transition-all flex items-center justify-center gap-3 group"
                 >
-                  向神明稟告所求何事
+                  開始稟告 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>
           )}
 
+          {/* INPUT */}
           {step === 'input' && (
-            <div className="h-full flex flex-col relative animate-in fade-in duration-500 bg-white">
-              <div className="h-2/5 w-full relative overflow-hidden">
+            <div className="flex-1 flex flex-col md:flex-row animate-in fade-in duration-500 bg-white">
+              <div className="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
                 <img src={DEITY_IMAGE} className="w-full h-full object-cover object-top" alt="Guan Yu" />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-white via-transparent to-transparent"></div>
               </div>
               
-              <div className="flex-1 flex flex-col items-center justify-start p-8 -mt-12 relative z-10 overflow-hidden space-y-4">
-                <div className="text-center">
-                  <h3 className="text-3xl font-serif-tc font-bold text-red-900 tracking-widest">恭敬稟告</h3>
-                  <p className="text-stone-500 text-sm mt-1 font-serif-tc">請講姓名、出生年月日、跟要求的事情</p>
+              <div className="md:w-2/3 p-8 md:p-16 flex flex-col items-center justify-center space-y-8">
+                <div className="text-center space-y-2">
+                  <h3 className="text-3xl md:text-4xl font-serif-tc font-bold text-red-900 tracking-widest">恭敬稟告</h3>
+                  <p className="text-stone-500 text-base font-serif-tc">請講述您的姓名、生辰，以及欲請示之事項。</p>
                 </div>
 
                 {inputMode === 'voice' ? (
-                  <div className="w-full flex-1 flex flex-col items-center justify-between pb-12">
-                    <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-sm relative shrink-0 my-4">
+                  <div className="w-full max-w-md flex flex-col items-center space-y-10">
+                    <div className="w-32 h-32 rounded-3xl overflow-hidden shadow-md relative shrink-0">
                       <img 
                         src={PRAYER_IMAGE} 
                         className={`w-full h-full object-cover transition-all duration-1000 mix-blend-multiply ${isRecording ? 'animate-pulse opacity-100 scale-105' : 'opacity-40 grayscale'}`} 
@@ -224,69 +228,78 @@ const App: React.FC = () => {
                       />
                     </div>
                     
-                    <div className="w-full space-y-8 flex flex-col items-center">
-                      <button onClick={() => setInputMode('manual')} className="text-red-800/60 text-sm flex items-center justify-center gap-2 italic hover:text-red-800 transition-colors">
-                        <Pencil size={14} /> 手寫稟告
-                      </button>
-                      <button onClick={handleFinishRecording} className="w-2/3 bg-red-800 text-white py-4 rounded-xl font-bold text-lg shadow-md active:scale-95 transition-all">
+                    <div className="w-full space-y-6 flex flex-col items-center">
+                      <div className="text-red-800/80 font-serif-tc text-center">
+                        {isRecording ? "正在傾聽您的祈禱..." : "準備中..."}
+                      </div>
+                      <button onClick={handleFinishRecording} className="w-full bg-red-800 text-white py-5 rounded-2xl font-bold text-xl shadow-lg hover:bg-red-900 active:scale-95 transition-all">
                         稟告完畢
+                      </button>
+                      <button onClick={() => setInputMode('manual')} className="text-stone-400 text-sm flex items-center gap-2 hover:text-red-800 transition-colors">
+                        <Pencil size={14} /> 改用手寫輸入
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full flex-1 flex flex-col space-y-4 pt-4 pb-12">
-                    <input type="text" placeholder="姓名" className="w-full p-4 bg-stone-100 rounded-xl outline-none focus:ring-1 focus:ring-red-500" value={userInfo.name} onChange={e => setUserInfo({...userInfo, name: e.target.value})} />
-                    <input type="text" placeholder="生辰" className="w-full p-4 bg-stone-100 rounded-xl outline-none focus:ring-1 focus:ring-red-500" value={userInfo.birthday} onChange={e => setUserInfo({...userInfo, birthday: e.target.value})} />
-                    <textarea placeholder="請示事由" className="w-full p-4 bg-stone-100 rounded-xl flex-1 outline-none focus:ring-1 focus:ring-red-500 resize-none" value={userInfo.quest} onChange={e => setUserInfo({...userInfo, quest: e.target.value})} />
-                    <button onClick={() => setStep('drawing')} className="w-full bg-red-800 text-white py-5 rounded-2xl font-bold active:scale-95 transition-all">確認完畢，開始求籤</button>
+                  <div className="w-full max-w-lg flex flex-col space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input type="text" placeholder="姓名" className="w-full p-4 bg-stone-50 rounded-xl border border-stone-200 outline-none focus:ring-2 focus:ring-red-500/20" value={userInfo.name} onChange={e => setUserInfo({...userInfo, name: e.target.value})} />
+                      <input type="text" placeholder="生辰 (例如: 民國xx年x月x日)" className="w-full p-4 bg-stone-50 rounded-xl border border-stone-200 outline-none focus:ring-2 focus:ring-red-500/20" value={userInfo.birthday} onChange={e => setUserInfo({...userInfo, birthday: e.target.value})} />
+                    </div>
+                    <textarea placeholder="請在此詳述欲請示 恩主公之事項..." className="w-full p-4 bg-stone-50 rounded-xl border border-stone-200 h-40 outline-none focus:ring-2 focus:ring-red-500/20 resize-none font-serif-tc" value={userInfo.quest} onChange={e => setUserInfo({...userInfo, quest: e.target.value})} />
+                    <button onClick={() => setStep('drawing')} className="w-full bg-red-800 text-white py-5 rounded-2xl font-bold text-xl shadow-lg hover:bg-red-900 active:scale-95 transition-all">確認完畢，開始求籤</button>
                   </div>
                 )}
               </div>
             </div>
           )}
 
+          {/* DRAWING */}
           {step === 'drawing' && (
-            <div className="flex-1 flex flex-col animate-in zoom-in h-full">
-              <div className="p-4 text-center space-y-1 shrink-0">
-                <h3 className="text-3xl font-serif-tc font-black text-red-900 tracking-widest">籤筒</h3>
-                <p className="text-stone-400 italic font-serif-tc text-base">請搖動籤筒抽籤</p>
+            <div className="flex-1 flex flex-col items-center justify-center animate-in zoom-in duration-500 p-8">
+              <div className="text-center space-y-2 mb-10">
+                <h3 className="text-4xl font-serif-tc font-black text-red-900 tracking-widest">搖動籤筒</h3>
+                <p className="text-stone-400 italic font-serif-tc text-lg">誠心祈求後，搖動籤筒抽取靈籤</p>
               </div>
 
-              <div className="flex-1 flex items-center justify-center px-4">
+              <div className="relative w-full max-w-xs md:max-w-sm aspect-square flex items-center justify-center">
                 <div 
                   onMouseDown={startShaking} onTouchStart={startShaking}
                   onMouseUp={stopShaking} onTouchEnd={stopShaking}
                   onMouseLeave={stopShaking}
-                  className={`w-full h-full max-h-[80%] transition-transform cursor-pointer flex items-center justify-center animate-[wiggle_1.2s_infinite]`}
+                  className={`w-full h-full transition-transform cursor-pointer flex items-center justify-center ${isShaking ? '' : 'animate-[wiggle_2s_infinite]'}`}
                 >
                   <img 
                     src={TUBE_IMAGE} 
-                    className={`h-full w-auto object-contain mix-blend-multiply ${isShaking ? 'animate-[shake_0.12s_infinite] scale-105' : ''}`} 
+                    className={`h-full w-auto object-contain mix-blend-multiply transition-all ${isShaking ? 'animate-[shake_0.1s_infinite] scale-110 drop-shadow-2xl' : 'hover:scale-105'}`} 
                     alt="籤筒" 
                   />
                 </div>
               </div>
               
-              <div className="p-6 text-center space-y-4 shrink-0">
-                <div className="text-stone-400 text-xs animate-pulse font-serif-tc">長按籤筒以加速搖動，放開即得籤</div>
+              <div className="mt-12 text-center space-y-4">
+                <div className="text-stone-400 text-sm animate-pulse font-serif-tc">
+                  {isShaking ? "正在感應靈籤中..." : "長按/滑鼠按住籤筒開始搖動，放開即得籤"}
+                </div>
               </div>
             </div>
           )}
 
+          {/* DRAW RESULT */}
           {step === 'draw_result' && currentPoem && (
-            <div className="flex-1 flex flex-col items-center justify-center p-8 space-y-12 animate-in slide-in-from-right">
-              <div className="text-center space-y-4">
-                <p className="text-stone-500 font-serif-tc text-lg tracking-widest">抽中靈籤</p>
-                <div className="w-48 h-1 bg-red-800/20 mx-auto rounded-full"></div>
-                <h3 className="text-5xl font-black text-red-900 font-serif-tc tracking-[0.5em]">{currentPoem.title}</h3>
-                <div className="w-48 h-1 bg-red-800/20 mx-auto rounded-full"></div>
+            <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-16 space-y-12 animate-in slide-in-from-right duration-700">
+              <div className="text-center space-y-6">
+                <p className="text-stone-500 font-serif-tc text-xl tracking-widest">抽中靈籤</p>
+                <div className="w-64 h-1 bg-red-800/20 mx-auto rounded-full"></div>
+                <h3 className="text-6xl md:text-8xl font-black text-red-900 font-serif-tc tracking-[0.5em] my-4">{currentPoem.title}</h3>
+                <div className="w-64 h-1 bg-red-800/20 mx-auto rounded-full"></div>
               </div>
 
-              <div className="w-full flex flex-col items-center space-y-4">
-                <p className="text-stone-600 font-serif-tc text-center leading-relaxed px-4">
+              <div className="w-full max-w-md flex flex-col items-center space-y-6">
+                <p className="text-stone-600 font-serif-tc text-center text-lg leading-relaxed">
                   已抽取此籤，請向 恩主公<br/>賜筊確認是否為此靈籤。
                 </p>
-                <div className="mt-8 flex items-center gap-1 text-red-800 font-black text-xl font-serif-tc">
+                <div className="mt-8 flex items-center gap-2 text-red-800 font-black text-2xl font-serif-tc">
                   <span>即將進入擲筊確認</span>
                   <span className="flex">
                     <span className="animate-[pulse_1s_infinite_0ms]">.</span>
@@ -298,25 +311,27 @@ const App: React.FC = () => {
             </div>
           )}
 
+          {/* BWEI */}
           {step === 'bwei' && (
-            <div className="p-8 flex flex-col items-center justify-center min-h-full animate-in slide-in-from-bottom duration-700">
-              <div className="text-center mb-2 shrink-0">
-                <h4 className="text-red-900 font-bold text-xl font-serif-tc">【 {currentPoem?.title} 】</h4>
-                <h3 className="text-2xl font-serif-tc font-black text-stone-800 tracking-widest">請擲筊確認</h3>
-                <p className="text-stone-400 text-xs font-serif-tc mt-1 h-4">需連續獲得三次聖筊確認此籤</p>
+            <div className="flex-1 flex flex-col items-center justify-center p-8 animate-in slide-in-from-bottom duration-700">
+              <div className="text-center space-y-3 mb-8">
+                <h4 className="text-red-900 font-bold text-2xl font-serif-tc">【 {currentPoem?.title} 】</h4>
+                <h3 className="text-3xl md:text-4xl font-serif-tc font-black text-stone-800 tracking-widest">擲筊請示</h3>
+                <p className="text-stone-500 font-serif-tc text-base">需連續獲得三次聖筊確認此籤</p>
               </div>
 
-              <div className="flex-1 flex flex-col items-center justify-center w-full">
-                  <div onClick={handleCastBwei} className="transform cursor-pointer hover:scale-[1.02] transition-transform active:scale-[0.98]">
+              <div className="flex-1 flex flex-col items-center justify-center w-full max-w-2xl">
+                  <div onClick={handleCastBwei} className="transform cursor-pointer hover:scale-[1.05] transition-transform active:scale-[0.95]">
                     <BweiVisual result={bweiResult} isAnimating={isBweiAnimating} />
                   </div>
-                  <div className="mt-4 text-stone-300 text-xs italic text-center animate-pulse font-serif-tc h-4">
-                    {!bweiResult && !isBweiAnimating && "點擊筊杯，請示 恩主公"}
+                  
+                  <div className="mt-6 text-stone-400 text-sm italic text-center animate-pulse font-serif-tc h-6">
+                    {!bweiResult && !isBweiAnimating && "點擊筊杯，誠心向 恩主公請示"}
                   </div>
 
                   {bweiResult && !isBweiAnimating && (
-                    <div className="mt-6 flex flex-col items-center space-y-4">
-                      <div className="text-5xl font-black font-serif-tc text-red-900 drop-shadow-md">
+                    <div className="mt-10 flex flex-col items-center space-y-6">
+                      <div className="text-6xl md:text-7xl font-black font-serif-tc text-red-900 drop-shadow-lg">
                         【 {
                           bweiResult === 'sheng' ? '聖 筊' : 
                           bweiResult === 'standing' ? '立 筊' : 
@@ -324,115 +339,144 @@ const App: React.FC = () => {
                         } 】
                       </div>
                       {bweiMessage && (
-                        <p className="text-red-600 font-black animate-pulse text-xl bg-red-50 px-6 py-2 rounded-full border border-red-100">{bweiMessage}</p>
+                        <p className="text-red-600 font-black animate-pulse text-2xl bg-red-50 px-8 py-3 rounded-full border border-red-100 shadow-sm">{bweiMessage}</p>
                       )}
                     </div>
                   )}
 
-                  {/* Move checkmarks here to be between the toss result and the button */}
-                  <div className="flex gap-4 py-8">
+                  {/* Progress Checkmarks Between Result and Button */}
+                  <div className="flex gap-6 py-10">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${shengCount >= i ? 'bg-green-600 border-green-200 text-white shadow-md' : 'bg-stone-50 border-stone-200 text-stone-300 shadow-inner'}`}>
-                        {shengCount >= i ? <Check size={20} strokeWidth={3} /> : <span className="text-xs font-bold">{i}</span>}
+                      <div key={i} className={`w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${shengCount >= i ? 'bg-green-600 border-green-200 text-white shadow-lg scale-110' : 'bg-stone-50 border-stone-200 text-stone-300 shadow-inner'}`}>
+                        {shengCount >= i ? <Check size={32} strokeWidth={3} /> : <span className="text-lg font-bold">{i}</span>}
                       </div>
                     ))}
                   </div>
               </div>
 
-              <div className="w-full shrink-0 flex justify-center pb-8">
+              <div className="w-full max-w-xs flex justify-center pb-10">
                 {shengCount === 3 && !isBweiAnimating ? (
-                  <button onClick={() => setStep('result')} className="px-10 bg-green-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg animate-bounce hover:bg-green-800 transition-colors">
+                  <button onClick={() => setStep('result')} className="w-full bg-green-700 text-white py-5 rounded-2xl font-bold text-xl shadow-xl animate-bounce hover:bg-green-800 transition-colors">
                     領取籤詩
                   </button>
                 ) : (
-                  <div className="h-[60px]"></div>
+                  <div className="h-[68px]"></div>
                 )}
               </div>
             </div>
           )}
 
+          {/* RESULT */}
           {step === 'result' && currentPoem && (
-            <div className="p-4 flex-1 flex flex-col animate-in fade-in duration-1000">
-              <div className="bg-white p-6 rounded-3xl shadow-xl flex-1 flex flex-col overflow-hidden border-t-[8px] border-red-800">
-                <div className="text-center mb-4">
-                  <h3 className="text-xl font-black text-red-900 font-serif-tc">
-                    {currentPoem.title}（{currentPoem.grade}）
+            <div className="flex-1 flex flex-col md:flex-row animate-in fade-in duration-1000 p-6 md:p-12 gap-8 bg-white">
+              <div className="md:w-1/2 flex flex-col items-center justify-center p-8 bg-[#fffcf7] rounded-3xl shadow-lg border-2 border-red-800 relative">
+                <div className="absolute top-4 left-4 right-4 bottom-4 border border-red-800/20 pointer-events-none rounded-2xl"></div>
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-black text-red-900 font-serif-tc tracking-widest">
+                    行天宮 雷雨師靈籤
                   </h3>
+                  <p className="text-lg font-serif-tc text-red-800 mt-2">{currentPoem.title}（{currentPoem.grade}）</p>
                 </div>
 
-                <div className="flex-1 flex flex-col items-center justify-center gap-2 my-1 font-serif-tc">
+                <div className="flex-1 flex flex-col items-center justify-center gap-4 font-serif-tc">
                    {currentPoem.poem.split('\n').map((line, idx) => (
-                     <p key={idx} className="text-xl font-black tracking-[0.2em] text-stone-800 text-center leading-relaxed">{line}</p>
+                     <p key={idx} className="text-2xl md:text-3xl font-black tracking-[0.3em] text-stone-800 text-center leading-relaxed drop-shadow-sm">{line}</p>
                    ))}
-                </div>
-
-                <div className="space-y-4 pt-4 border-t border-stone-100">
-                   <div>
-                      <p className="font-bold text-red-800 mb-1 text-sm font-serif-tc tracking-widest uppercase">【 聖 意 】</p>
-                      <p className="text-stone-700 font-serif-tc leading-relaxed text-sm">{currentPoem.advice}</p>
-                   </div>
-                   <div>
-                      <p className="font-bold text-red-800 mb-1 text-sm font-serif-tc tracking-widest uppercase">【 解 說 】</p>
-                      <p className="text-stone-700 font-serif-tc leading-relaxed text-sm">{currentPoem.explanation}</p>
-                   </div>
                 </div>
               </div>
 
-              <div className="p-6 space-y-4 pb-12">
-                <button onClick={downloadImage} className="w-full bg-red-800 text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center active:scale-95 transition-all shadow-lg hover:bg-red-900">
-                    留存籤詩
-                </button>
-                <button onClick={() => { setStep('welcome'); setShengCount(0); }} className="w-full py-2 text-stone-400 text-sm font-bold flex items-center justify-center gap-2 hover:text-red-800 transition-colors">
-                    再求一籤
-                </button>
+              <div className="md:w-1/2 flex flex-col space-y-8 py-4">
+                <div className="flex-1 space-y-6 overflow-y-auto max-h-[400px] pr-4 scrollbar-hide">
+                   <div className="space-y-2">
+                      <p className="font-bold text-red-800 text-lg font-serif-tc tracking-widest flex items-center gap-2">
+                        <span className="w-2 h-2 bg-red-800 rounded-full"></span> 聖 意
+                      </p>
+                      <p className="text-stone-700 font-serif-tc leading-relaxed text-lg pl-4">{currentPoem.advice}</p>
+                   </div>
+                   <div className="space-y-2">
+                      <p className="font-bold text-red-800 text-lg font-serif-tc tracking-widest flex items-center gap-2">
+                        <span className="w-2 h-2 bg-red-800 rounded-full"></span> 解 說
+                      </p>
+                      <p className="text-stone-700 font-serif-tc leading-relaxed text-lg pl-4">{currentPoem.explanation}</p>
+                   </div>
+                </div>
+
+                <div className="space-y-4">
+                  <button onClick={downloadImage} className="w-full bg-red-800 text-white py-5 rounded-2xl font-bold text-xl flex items-center justify-center gap-3 shadow-lg hover:bg-red-900 active:scale-95 transition-all">
+                    <Download size={24} /> 留存籤詩 (下載)
+                  </button>
+                  <button onClick={() => { setStep('welcome'); setShengCount(0); }} className="w-full py-3 text-stone-400 text-base font-bold flex items-center justify-center gap-2 hover:text-red-800 transition-colors">
+                    <RotateCcw size={18} /> 再求一籤
+                  </button>
+                </div>
               </div>
               <canvas ref={canvasRef} width="400" height="800" className="hidden"></canvas>
             </div>
           )}
 
+          {/* HISTORY (Donation / Archives) */}
           {step === 'history' && (
-            <div className="p-8 h-full flex flex-col space-y-6 bg-white">
-              <h3 className="text-2xl font-black font-serif-tc text-red-900 tracking-widest flex items-center gap-2">
-                <HandCoins className="text-yellow-600" /> 添香油錢
-              </h3>
-              <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
-                <div className="w-32 h-32 bg-stone-50 rounded-full flex items-center justify-center">
-                  <HandCoins size={64} className="text-yellow-600 animate-bounce" />
-                </div>
-                <div className="space-y-2">
-                  <p className="font-serif-tc text-lg font-bold text-stone-800">隨喜功德 廣結善緣</p>
-                  <p className="font-serif-tc text-sm text-stone-500 leading-relaxed px-6">弟子誠心向善，恩主公必有感應。<br/>此頁面為歷史求籤紀錄(功德簿)。</p>
-                </div>
-                <div className="w-full overflow-y-auto max-h-[300px] space-y-4 pr-2 scrollbar-hide">
-                  {history.length === 0 ? <p className="opacity-30 italic font-serif-tc py-10">尚未有紀錄</p> : history.map(item => (
-                    <div key={item.key} onClick={() => { setCurrentPoem(item); setStep('result'); }} className="p-4 bg-stone-50 rounded-2xl shadow-sm border-l-4 border-red-800 cursor-pointer text-left hover:bg-stone-100 transition-colors">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-bold text-red-900 font-serif-tc">{item.title}</span>
-                        <span className="text-[9px] text-stone-400 font-mono">{item.timestamp}</span>
+            <div className="flex-1 flex flex-col md:flex-row animate-in slide-in-from-right bg-white overflow-hidden">
+               <div className="md:w-1/3 bg-stone-50 p-12 flex flex-col items-center justify-center text-center space-y-8 border-b md:border-b-0 md:border-r border-stone-100">
+                  <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-inner relative">
+                    <HandCoins size={80} className="text-yellow-600 animate-bounce" />
+                    <div className="absolute inset-0 border-4 border-yellow-100 rounded-full animate-ping opacity-20"></div>
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="text-3xl font-black font-serif-tc text-red-900 tracking-widest">功德簿</h3>
+                    <p className="font-serif-tc text-stone-500 leading-relaxed text-lg">
+                      隨喜功德，廣結善緣。<br/>在此回顧過往抽得之靈籤。
+                    </p>
+                  </div>
+                  <button onClick={() => setStep('welcome')} className="w-full bg-stone-800 text-white py-4 rounded-xl font-bold hover:bg-black transition-colors">返回首頁</button>
+              </div>
+
+              <div className="md:w-2/3 p-8 md:p-12 overflow-y-auto max-h-[70vh] scrollbar-hide">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {history.length === 0 ? (
+                    <div className="col-span-full py-20 text-center opacity-30 italic font-serif-tc text-2xl">目前尚無求籤紀錄</div>
+                  ) : (
+                    history.map(item => (
+                      <div key={item.key} onClick={() => { setCurrentPoem(item); setStep('result'); }} className="p-6 bg-stone-50 rounded-2xl shadow-sm border-l-8 border-red-800 cursor-pointer text-left hover:bg-stone-100 transition-all hover:scale-[1.02] group">
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="font-black text-xl text-red-900 font-serif-tc group-hover:underline">{item.title}</span>
+                          <span className="text-[10px] text-stone-400 font-mono bg-white px-2 py-1 rounded-full">{item.timestamp}</span>
+                        </div>
+                        <p className="text-stone-500 font-serif-tc leading-relaxed line-clamp-2 italic">{item.poem.replace(/\n/g, ' ')}</p>
+                        <div className="mt-4 flex items-center justify-end text-red-800 font-bold text-sm">
+                          查看詳解 <ArrowRight size={14} className="ml-1" />
+                        </div>
                       </div>
-                      <p className="text-xs text-stone-500 truncate font-serif-tc italic">{item.poem.replace(/\n/g, ' ')}</p>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
-              <button onClick={() => setStep('welcome')} className="w-full bg-red-800 text-white py-4 rounded-xl font-bold">返回首頁</button>
             </div>
           )}
         </div>
-      </div>
+      </main>
+
+      {/* Website Footer Info */}
+      <footer className="w-full py-8 text-center text-stone-400 text-sm font-serif-tc border-t border-stone-200 mt-10">
+        <p>© 2025 行天宮線上求籤系統 · AI 輔助版</p>
+        <p className="mt-2 text-stone-300">本系統僅供參考，誠心為要，信而不迷</p>
+      </footer>
 
       <style>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0) rotate(0); }
-          25% { transform: translateX(-4px) rotate(-1deg); }
-          75% { transform: translateX(4px) rotate(1deg); }
+          25% { transform: translateX(-6px) rotate(-2deg); }
+          75% { transform: translateX(6px) rotate(2deg); }
         }
         @keyframes wiggle {
-          0%, 100% { transform: rotate(-1.5deg) scale(1); }
-          50% { transform: rotate(1.5deg) scale(0.98); }
+          0%, 100% { transform: rotate(-2deg) scale(1); }
+          50% { transform: rotate(2deg) scale(0.99); }
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Specific fonts for browsers without system support */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap');
       `}</style>
     </div>
   );
