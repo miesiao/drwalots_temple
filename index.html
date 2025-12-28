@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -7,28 +6,149 @@
     <title>行天宮線上求籤 AI 版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f5f5f0;
-        }
-        .font-serif-tc {
-            font-family: 'Noto Serif TC', serif;
-        }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f5f5f0; }
+        .font-serif-tc { font-family: 'Noto Serif TC', serif; }
+        @keyframes shake { 0%, 100% { transform: translateX(0) rotate(0); } 25% { transform: translateX(-6px) rotate(-2deg); } 75% { transform: translateX(6px) rotate(2deg); } }
+        @keyframes wiggle { 0%, 100% { transform: rotate(-2deg) scale(1); } 50% { transform: rotate(2deg) scale(0.99); } }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
-  }
-}
-</script>
+    
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+      }
+    }
+    </script>
 </head>
 <body>
     <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useRef, useCallback } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { Download, Loader2, Check, RotateCcw, Pencil, HandCoins, ArrowRight } from 'lucide-react';
+
+        // 模擬原本外部檔案的資料 (因篇幅限制，這裡放一支示範籤詩)
+        const POEM_DATA = [
+            { title: "第一籤", grade: "大吉", poem: "巍巍獨步向雲間\n玉殿千官第一班\n富貴榮華天付汝\n福如東海壽如山", advice: "功名大吉，財源廣進。", explanation: "這是一首極好的籤，代表你的願望將會達成。" }
+        ];
+
+        const DEITY_IMAGE = "https://i.ibb.co/4nprTL6r/image.jpg"; 
+        const TUBE_IMAGE = "https://i.ibb.co/twzyvrXg/image.jpg";
+        const PRAYER_IMAGE = "https://i.ibb.co/nqZqSncJ/image.jpg";
+
+        // 模擬 BweiVisual 組件
+        const BweiVisual = ({ result, isAnimating }) => (
+            <div className={`text-8xl ${isAnimating ? 'animate-bounce' : ''}`}>
+                {result === 'sheng' ? '🔴' : result === 'xiao' ? '🟡' : '⚫'}
+            </div>
+        );
+
+        const App = () => {
+            const [step, setStep] = useState('welcome');
+            const [userInfo, setUserInfo] = useState({ name: '', quest: '' });
+            const [currentPoem, setCurrentPoem] = useState(null);
+            const [bweiResult, setBweiResult] = useState(null);
+            const [isBweiAnimating, setIsBweiAnimating] = useState(false);
+            const [shengCount, setShengCount] = useState(0);
+            const [isShaking, setIsShaking] = useState(false);
+
+            const startShaking = () => setIsShaking(true);
+            const stopShaking = () => {
+                if (isShaking) {
+                    setIsShaking(false);
+                    setCurrentPoem(POEM_DATA[0]);
+                    setStep('draw_result');
+                    setTimeout(() => setStep('bwei'), 3000);
+                }
+            };
+
+            const handleCastBwei = () => {
+                if (isBweiAnimating) return;
+                setIsBweiAnimating(true);
+                setTimeout(() => {
+                    const res = Math.random() > 0.5 ? 'sheng' : 'xiao';
+                    setBweiResult(res);
+                    setIsBweiAnimating(false);
+                    if (res === 'sheng') {
+                        if (shengCount + 1 === 3) setStep('result');
+                        else setShengCount(shengCount + 1);
+                    } else {
+                        setShengCount(0);
+                    }
+                }, 1000);
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col items-center">
+                    <header className="w-full bg-red-900 text-white py-4 text-center shadow-lg">
+                        <h1 className="text-2xl font-bold font-serif-tc">行天宮線上求籤</h1>
+                    </header>
+                    
+                    <main className="w-full max-w-4xl p-6">
+                        <div className="bg-white rounded-3xl shadow-xl min-h-[60vh] flex flex-col items-center justify-center p-8">
+                            {step === 'welcome' && (
+                                <div className="text-center space-y-6">
+                                    <img src={DEITY_IMAGE} className="w-48 h-48 rounded-full mx-auto object-cover" />
+                                    <h2 className="text-4xl font-black text-red-900 font-serif-tc">恩主公靈籤</h2>
+                                    <button onClick={() => setStep('drawing')} className="bg-red-800 text-white px-8 py-4 rounded-full text-xl flex items-center gap-2">
+                                        開始求籤 <ArrowRight />
+                                    </button>
+                                </div>
+                            )}
+
+                            {step === 'drawing' && (
+                                <div className="text-center space-y-10">
+                                    <h3 className="text-2xl font-serif-tc">按住籤筒搖動</h3>
+                                    <div onMouseDown={startShaking} onMouseUp={stopShaking} className={`cursor-pointer ${isShaking ? 'animate-[shake_0.1s_infinite]' : ''}`}>
+                                        <img src={TUBE_IMAGE} className="w-40 mx-auto" />
+                                    </div>
+                                    <p className="text-gray-400">長按搖動，放開得籤</p>
+                                </div>
+                            )}
+
+                            {step === 'draw_result' && (
+                                <div className="text-center animate-pulse">
+                                    <h3 className="text-6xl font-black text-red-900">{currentPoem?.title}</h3>
+                                    <p className="mt-4">即將進入擲筊確認...</p>
+                                </div>
+                            )}
+
+                            {step === 'bwei' && (
+                                <div className="text-center space-y-6">
+                                    <h3 className="text-2xl">擲筊請示 ({shengCount}/3)</h3>
+                                    <div onClick={handleCastBwei} className="cursor-pointer">
+                                        <BweiVisual result={bweiResult} isAnimating={isBweiAnimating} />
+                                    </div>
+                                    <p className="text-gray-500">點擊筊杯</p>
+                                </div>
+                            )}
+
+                            {step === 'result' && (
+                                <div className="text-center space-y-6 font-serif-tc">
+                                    <h3 className="text-3xl font-bold text-red-900">{currentPoem?.title}</h3>
+                                    <div className="text-2xl whitespace-pre-wrap leading-loose">{currentPoem?.poem}</div>
+                                    <div className="bg-stone-100 p-4 rounded-lg text-left">
+                                        <p className="font-bold text-red-800">聖意：</p>
+                                        <p>{currentPoem?.advice}</p>
+                                    </div>
+                                    <button onClick={() => setStep('welcome')} className="text-red-800 flex items-center gap-2 mx-auto">
+                                        <RotateCcw size={20} /> 再求一籤
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
