@@ -21,8 +21,7 @@
     {
       "imports": {
         "react": "https://esm.sh/react@18.2.0",
-        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client"
       }
     }
     </script>
@@ -31,29 +30,14 @@
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        import React, { useState, useEffect, useRef, useCallback } from 'react';
+        import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { Download, Check, RotateCcw, HandCoins, ArrowRight } from 'lucide-react';
 
-        // --- 1. 資料區 (原本在 constants.ts 的資料) ---
         const POEM_DATA = [
-            { title: "第一籤", grade: "大吉", poem: "巍巍獨步向雲間\n玉殿千官第一班\n富貴榮華天付汝\n福如東海壽如山", advice: "功名大吉，財源廣進。", explanation: "這代表你的願望將會達成，獲得極大的福報。" }
+            { title: "第一籤", grade: "大吉", poem: "巍巍獨步向雲間\n玉殿千官第一班\n富貴榮華天付汝\n福如東海壽如山", advice: "功名大吉，財源廣進。", explanation: "這代表你的願望將會達成，獲得極大的福報。" },
+            { title: "第二籤", grade: "中平", poem: "盈虛消息總天時\n自此君當百事宜\n若問前程歸縮地\n須憑方寸好修為", advice: "隨緣守舊，誠信為本。", explanation: "一切自有天意，只要保持良善之心，自然平順。" }
         ];
 
-        // --- 2. 組件區 (原本在組件資料夾的內容) ---
-        const BweiVisual = ({ result, isAnimating }) => (
-            <div className={`flex justify-center gap-4 text-6xl my-10 ${isAnimating ? 'animate-bounce' : ''}`}>
-                {result === 'sheng' ? (
-                    <React.Fragment><span className="rotate-45">🌙</span><span className="-rotate-45 scale-x-[-1]">🌙</span></React.Fragment>
-                ) : result === 'xiao' ? (
-                    <React.Fragment><span className="rotate-45 scale-x-[-1]">🌙</span><span className="-rotate-45">🌙</span></React.Fragment>
-                ) : (
-                    <span className="text-4xl text-stone-400 italic">點擊開始擲筊</span>
-                )}
-            </div>
-        );
-
-        // --- 3. 主程式區 ---
         const App = () => {
             const [step, setStep] = useState('welcome');
             const [currentPoem, setCurrentPoem] = useState(null);
@@ -69,47 +53,42 @@
                     setCurrentPoem(POEM_DATA[Math.floor(Math.random() * POEM_DATA.length)]);
                     setStep('draw_result');
                     setTimeout(() => setStep('bwei'), 2000);
-                }, 1500);
+                }, 1000);
             };
 
             const handleCastBwei = () => {
                 if (isBweiAnimating) return;
                 setIsBweiAnimating(true);
+                setBweiResult(null);
                 setTimeout(() => {
                     const res = Math.random() > 0.4 ? 'sheng' : 'xiao';
                     setBweiResult(res);
                     setIsBweiAnimating(false);
                     if (res === 'sheng') {
-                        const newCount = shengCount + 1;
-                        if (newCount === 3) {
-                            setStep('result');
-                        } else {
-                            setShengCount(newCount);
-                        }
+                        if (shengCount + 1 === 3) setStep('result');
+                        else setShengCount(shengCount + 1);
                     } else {
-                        setShengCount(0); // 沒擲到聖筊就重來
+                        setShengCount(0);
                     }
-                }, 800);
+                }, 600);
             };
 
             return (
                 <div className="min-h-screen flex flex-col items-center">
-                    <header className="w-full bg-red-900 text-white py-6 text-center shadow-lg sticky top-0 z-50">
+                    <header className="w-full bg-red-900 text-white py-6 text-center shadow-lg">
                         <h1 className="text-2xl font-bold font-serif-tc tracking-widest">行天宮線上求籤</h1>
                     </header>
                     
-                    <main className="w-full max-w-2xl p-6 mt-4">
-                        <div className="bg-white rounded-3xl shadow-2xl min-h-[50vh] flex flex-col items-center justify-center p-10 border border-stone-200">
+                    <main className="w-full max-w-xl p-6 mt-4">
+                        <div className="bg-white rounded-3xl shadow-2xl min-h-[50vh] flex flex-col items-center justify-center p-8 border border-stone-200">
                             
                             {step === 'welcome' && (
-                                <div className="text-center space-y-8 animate-in fade-in">
-                                    <div className="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-                                        <span className="text-5xl">🙏</span>
-                                    </div>
+                                <div className="text-center space-y-8">
+                                    <div className="text-7xl">🙏</div>
                                     <h2 className="text-4xl font-black text-red-900 font-serif-tc">恩主公靈籤</h2>
-                                    <p className="text-stone-500">誠心向 恩主公稟告您的姓名與所求之事</p>
-                                    <button onClick={() => setStep('drawing')} className="w-full bg-red-800 text-white px-8 py-4 rounded-2xl text-xl font-bold hover:bg-red-900 transition-all flex items-center justify-center gap-3">
-                                        開始求籤 <ArrowRight />
+                                    <p className="text-stone-500">誠心稟告您的姓名與所求之事</p>
+                                    <button onClick={() => setStep('drawing')} className="w-full bg-red-800 text-white px-8 py-4 rounded-2xl text-xl font-bold hover:bg-red-900 transition-all">
+                                        開始求籤 ➔
                                     </button>
                                 </div>
                             )}
@@ -134,40 +113,39 @@
 
                             {step === 'bwei' && (
                                 <div className="text-center w-full space-y-4">
-                                    <h3 className="text-xl font-bold">擲筊確認 ({shengCount}/3 聖筊)</h3>
-                                    <div onClick={handleCastBwei} className="cursor-pointer active:scale-90 transition-transform">
-                                        <BweiVisual result={bweiResult} isAnimating={isBweiAnimating} />
+                                    <h3 className="text-xl font-bold font-serif-tc">擲筊確認 ({shengCount}/3 聖筊)</h3>
+                                    <div onClick={handleCastBwei} className={`text-6xl my-10 cursor-pointer transition-all ${isBweiAnimating ? 'animate-bounce opacity-50' : ''}`}>
+                                        {bweiResult === 'sheng' ? '🌙🌙' : bweiResult === 'xiao' ? '🌕🌕' : '🙌'}
                                     </div>
                                     <div className="flex justify-center gap-4">
                                         {[1, 2, 3].map(i => (
                                             <div key={i} className={`w-10 h-10 rounded-full border-2 flex items-center justify-center ${shengCount >= i ? 'bg-green-500 border-green-200 text-white' : 'bg-stone-50 text-stone-300'}`}>
-                                                {shengCount >= i ? <Check size={20} /> : i}
+                                                {shengCount >= i ? '✓' : i}
                                             </div>
                                         ))}
                                     </div>
-                                    <p className="text-stone-400 text-sm">點擊筊杯請示 恩主公</p>
+                                    <p className="text-stone-400 text-sm">點擊上方手部圖示擲筊</p>
                                 </div>
                             )}
 
                             {step === 'result' && (
-                                <div className="text-center space-y-6 font-serif-tc animate-in zoom-in">
-                                    <h3 className="text-3xl font-bold text-red-900 underline underline-offset-8 decoration-red-200">{currentPoem?.title}</h3>
-                                    <div className="text-2xl whitespace-pre-wrap leading-loose font-black text-stone-800 bg-stone-50 p-6 rounded-2xl border border-stone-100">
+                                <div className="text-center space-y-6 font-serif-tc">
+                                    <h3 className="text-3xl font-bold text-red-900">{currentPoem?.title}</h3>
+                                    <div className="text-2xl whitespace-pre-wrap leading-loose font-black text-stone-800 bg-stone-50 p-6 rounded-2xl">
                                         {currentPoem?.poem}
                                     </div>
-                                    <div className="text-left space-y-4">
-                                        <p><strong className="text-red-800">【聖意】</strong><br/>{currentPoem?.advice}</p>
-                                        <p><strong className="text-red-800">【解說】</strong><br/>{currentPoem?.explanation}</p>
+                                    <div className="text-left space-y-4 text-stone-700">
+                                        <p><strong className="text-red-800">【聖意】</strong> {currentPoem?.advice}</p>
+                                        <p><strong className="text-red-800">【解說】</strong> {currentPoem?.explanation}</p>
                                     </div>
-                                    <button onClick={() => {setStep('welcome'); setShengCount(0); setBweiResult(null);}} className="w-full py-4 text-red-800 font-bold flex items-center justify-center gap-2 hover:bg-red-50 rounded-xl transition-colors">
-                                        <RotateCcw size={20} /> 再求一籤
+                                    <button onClick={() => {setStep('welcome'); setShengCount(0); setBweiResult(null);}} className="w-full py-4 text-red-800 font-bold border border-red-800 rounded-xl">
+                                        再求一籤
                                     </button>
                                 </div>
                             )}
-
                         </div>
                     </main>
-                    <footer className="py-10 text-stone-400 text-sm">© 2025 行天宮線上求籤 · AI 整合版</footer>
+                    <footer className="py-10 text-stone-400 text-sm">© 2025 行天宮線上求籤</footer>
                 </div>
             );
         };
