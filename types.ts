@@ -19,13 +19,6 @@ export interface UserInfo {
   address: string;
 }
 
-export interface UserInfo {
-  name: string;
-  quest: string;
-  birthday: string;
-  address: string;
-}
-
 export interface DivinationRecord extends Poem, UserInfo {
   timestamp: string;
   key: number;
