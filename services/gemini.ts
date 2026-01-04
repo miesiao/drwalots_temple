@@ -1,9 +1,8 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { UserInfo } from "../types";
+import { UserInfo } from "../types.ts";
 
 export const processTranscriptWithAI = async (transcript: string): Promise<UserInfo> => {
-  // Use the API key directly from environment variables as per guidelines
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const response = await ai.models.generateContent({
