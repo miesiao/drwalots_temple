@@ -1,5 +1,5 @@
 {
-  "name": "行天宮線上求籤 AI 版",
+  "name": "已上線_行天宮線上求籤 AI 版",
   "description": "融合傳統信仰與現代 AI 技術的線上求籤平台。支援語音稟告、AI 自動彙整訴求、擬真擲筊與精美籤詩下載。",
   "requestFramePermissions": [
     "microphone"
